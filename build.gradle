@@ -1,0 +1,56 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.0.RELEASE'
+        mapstructVersion = '1.2.0.Beta1'
+        lombokVersion = '1.18.0'
+        restAssuredVersion = '3.1.1'
+        oauth2Version = '2.3.3.RELEASE'
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+plugins {
+	id 'net.ltgt.apt' version '0.18'
+	id 'java'
+	id 'org.springframework.boot' version "2.0.4.RELEASE"
+	id 'io.spring.dependency-management' version "1.0.6.RELEASE"
+}
+
+group = 'com.gustavoballeste'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+	compile 'org.springframework.boot:spring-boot-starter-security'
+	compile 'org.springframework.boot:spring-boot-starter-web'
+    compile "org.springframework.security.oauth:spring-security-oauth2:${oauth2Version}"
+	compile "io.rest-assured:json-path:${restAssuredVersion}"
+	compile "org.mapstruct:mapstruct-jdk8:${mapstructVersion}"
+
+	runtime 'com.h2database:h2'
+    runtime 'org.springframework.boot:spring-boot-devtools'
+
+    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+    compileOnly "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    apt "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
+
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+	testCompile 'org.springframework.security:spring-security-test'
+	testCompile "io.rest-assured:spring-mock-mvc:${restAssuredVersion}"
+	testCompile "io.rest-assured:json-schema-validator:${restAssuredVersion}"
+
+}
+
+tasks.withType(JavaCompile) {
+	options.compilerArgs = [
+            '-Amapstruct.defaultComponentModel=spring'
+	]
+}
