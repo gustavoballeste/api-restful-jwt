@@ -1,14 +1,12 @@
 package com.gustavoballeste.api_restful_jwt.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Data
 @Entity
 @Table(name = "tb_role")
-@NoArgsConstructor
 public class Role {
 
     @Id

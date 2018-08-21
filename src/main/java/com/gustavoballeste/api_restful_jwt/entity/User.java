@@ -1,7 +1,6 @@
 package com.gustavoballeste.api_restful_jwt.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,7 +8,6 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "tb_user")
-@NoArgsConstructor
 public class User {
 
     private static final long serialVersionUID = 1L;
@@ -30,9 +28,7 @@ public class User {
     @OneToMany(mappedBy = "user", cascade= CascadeType.PERSIST)
     private List<Phone> phones;
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
+    @OneToMany(cascade= CascadeType.PERSIST)
+    private List<Role> roles;
 
 }

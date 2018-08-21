@@ -6,20 +6,26 @@ import com.gustavoballeste.api_restful_jwt.api.dto.UserDTO;
 import com.gustavoballeste.api_restful_jwt.api.mapper.PhoneMapper;
 import com.gustavoballeste.api_restful_jwt.api.mapper.UserMapper;
 import com.gustavoballeste.api_restful_jwt.entity.Phone;
+import com.gustavoballeste.api_restful_jwt.entity.Role;
 import com.gustavoballeste.api_restful_jwt.entity.User;
 import com.gustavoballeste.api_restful_jwt.exception.ResourceNotFoundException;
 import com.gustavoballeste.api_restful_jwt.repository.PhoneRepository;
 import com.gustavoballeste.api_restful_jwt.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    public static final String ROLE_USER = "USER";
+    public static final String ROLE_ACTUATOR = "ACTUATOR";
 
     static Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
@@ -41,8 +47,8 @@ public class UserServiceImpl implements UserService {
     @Value("${base.url}")
     private String baseUrl;
 
-    //    @Autowired
-//    PasswordEncoder passwordEncoder;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @Override
     public UserDTO getById(Long id) {
@@ -60,9 +66,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO createNew(UserDTO userDTO) {
         logger.info("User: " + userDTO);
-
+        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User savedUser = userMapper.userDTOToUser(userDTO);
         userRepository.save(savedUser);
+        List<Role> userDefaultRoles = Arrays.asList(new Role(ROLE_USER), new Role(ROLE_ACTUATOR));
+        savedUser.setRoles(userDefaultRoles);
         UserDTO returnDTO = userMapper.userToUserDTO(savedUser);
 
         List<PhoneDTO> phoneList = new ArrayList<>();
@@ -92,4 +100,7 @@ public class UserServiceImpl implements UserService {
         return baseUrl + userBaseUrl + "/" + id;
     }
 
+    private boolean validatePassword(LoginDTO loginDTO, User user) {
+        return loginDTO.getEmail().equals(user.getPassword());
+    }
 }
