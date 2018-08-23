@@ -24,6 +24,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     @Value("${invalid.session.exception}")
     String invalidSessionException;
 
+    @Value("${duplicate.resource.exception}")
+    String duplicateResourceException;
+
     @ExceptionHandler({ResourceNotFoundException.class})
     public ResponseEntity<Object> handleNotFoundException(){
         return new ResponseEntity(userNotFound, new HttpHeaders(), HttpStatus.NOT_FOUND);
@@ -31,17 +34,22 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
     @ExceptionHandler({InvalidPasswordException.class})
     public ResponseEntity<Object> handleInvalidPasswordException(){
-        return new ResponseEntity("Usuário e/ou senha inválidos", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity(invalidAccessException, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({UnauthorizedUserException.class})
     public ResponseEntity<Object> handleUnauthorizedException(){
-        return new ResponseEntity("Não Autorizado", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity(unauthorizedException, new HttpHeaders(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({RequestTimeoutException.class})
     public ResponseEntity<Object> handleRequestTimeoutException(){
-        return new ResponseEntity("Sessão inválida", new HttpHeaders(), HttpStatus.REQUEST_TIMEOUT);
+        return new ResponseEntity(invalidSessionException, new HttpHeaders(), HttpStatus.REQUEST_TIMEOUT);
+    }
+
+    @ExceptionHandler({DuplicateResourceException.class})
+    public ResponseEntity<Object> handleDuplicateResourceException(){
+        return new ResponseEntity(duplicateResourceException, new HttpHeaders(), HttpStatus.CONFLICT);
     }
 
 }
