@@ -7,6 +7,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.mapstruct.factory.Mappers;
 
+import javax.persistence.ManyToOne;
+
 @Mapper
 public interface UserMapper {
 
@@ -20,6 +22,7 @@ public interface UserMapper {
 
     @Mappings({
         @Mapping(target = "id", ignore = true),
+        @Mapping(target = "roles", ignore = true),
         @Mapping(target = "phones", ignore = true),
         @Mapping(source = "email", target = "username")
     })

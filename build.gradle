@@ -25,7 +25,9 @@ targetCompatibility = JavaVersion.VERSION_1_8
 repositories {
 	mavenCentral()
 }
-
+configurations {
+	apt
+}
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile 'org.springframework.boot:spring-boot-starter-security'
@@ -37,10 +39,14 @@ dependencies {
 	runtime 'com.h2database:h2'
     runtime 'org.springframework.boot:spring-boot-devtools'
 
-    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+//    compileOnly "org.projectlombok:lombok:${lombokVersion}"
+//	compile "org.projectlombok:lombok:${lombokVersion}"
     compileOnly "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 
-    apt "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
+    apt "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+//    apt "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
+//	apt "org.projectlombok:lombok:${lombokVersion}"
+//	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}", "org.projectlombok:lombok:${lombokVersion}"
 
 	testCompile 'org.springframework.boot:spring-boot-starter-test'
 	testCompile 'org.springframework.security:spring-security-test'
@@ -50,7 +56,10 @@ dependencies {
 }
 
 tasks.withType(JavaCompile) {
-	options.compilerArgs = [
-            '-Amapstruct.defaultComponentModel=spring'
-	]
+	inputs.files configurations.apt
+	outputs.dir 'gen/'
+	options.compilerArgs += [ '-s', 'gen/', '-processorpath', configurations.apt.asPath ,'-Amapstruct.defaultComponentModel=spring']
+	doFirst {
+		mkdir('gen/')
+	}
 }
