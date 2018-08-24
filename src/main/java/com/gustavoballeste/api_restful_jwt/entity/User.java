@@ -34,7 +34,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade= CascadeType.PERSIST)
     private List<Phone> phones;
 
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_user", joinColumns = {
             @JoinColumn(name = "user_id", referencedColumnName = "id") }, inverseJoinColumns = {

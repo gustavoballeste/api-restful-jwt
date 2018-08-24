@@ -20,6 +20,7 @@ public interface UserMapper {
 
     @Mappings({
         @Mapping(target = "id", ignore = true),
+        @Mapping(target = "roles", ignore = true),
         @Mapping(target = "phones", ignore = true),
         @Mapping(source = "email", target = "username")
     })
