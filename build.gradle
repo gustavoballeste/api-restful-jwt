@@ -65,15 +65,6 @@ tasks.withType(JavaCompile) {
     ]
 }
 
-//tasks.withType(JavaCompile) {
-//	inputs.files configurations.apt
-//	outputs.dir 'gen/'
-//	options.compilerArgs += [ '-s', 'gen/', '-processorpath', configurations.apt.asPath ,'-Amapstruct.defaultComponentModel=spring']
-//	doFirst {
-//		mkdir('gen/')
-//	}
-//}
-
 jib {
 	to {
 		image = "gustavoballeste/api-restful-jwt:$project.version"
