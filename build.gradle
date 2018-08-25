@@ -26,7 +26,9 @@ targetCompatibility = JavaVersion.VERSION_1_8
 repositories {
 	mavenCentral()
 }
-
+configurations {
+	apt
+}
 dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-data-jpa'
 	compile 'org.springframework.boot:spring-boot-starter-security'
@@ -58,9 +60,12 @@ dependencies {
 }
 
 tasks.withType(JavaCompile) {
-	options.compilerArgs = [
-            '-Amapstruct.defaultComponentModel=spring'
-	]
+	inputs.files configurations.apt
+	outputs.dir 'gen/'
+	options.compilerArgs += [ '-s', 'gen/', '-processorpath', configurations.apt.asPath ,'-Amapstruct.defaultComponentModel=spring']
+	doFirst {
+		mkdir('gen/')
+	}
 }
 
 jib {
