@@ -60,13 +60,19 @@ dependencies {
 }
 
 tasks.withType(JavaCompile) {
-	inputs.files configurations.apt
-	outputs.dir 'gen/'
-	options.compilerArgs += [ '-s', 'gen/', '-processorpath', configurations.apt.asPath ,'-Amapstruct.defaultComponentModel=spring']
-	doFirst {
-		mkdir('gen/')
-	}
+    options.compilerArgs = [
+            '-Amapstruct.defaultComponentModel=spring'
+    ]
 }
+
+//tasks.withType(JavaCompile) {
+//	inputs.files configurations.apt
+//	outputs.dir 'gen/'
+//	options.compilerArgs += [ '-s', 'gen/', '-processorpath', configurations.apt.asPath ,'-Amapstruct.defaultComponentModel=spring']
+//	doFirst {
+//		mkdir('gen/')
+//	}
+//}
 
 jib {
 	to {
